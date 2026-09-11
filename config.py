@@ -1,20 +1,4 @@
-"""
-Configuration file for the GAN -> Diffusion -> CNN hybrid pipeline.
-
-All hyperparameters below are taken directly from the user-provided
-training-parameter table. One correction was applied:
-
-    The original table listed "SoftMax" as the *Optimizer* for the CNN
-    classifier. Softmax is an activation function, not an optimizer, so
-    it has been moved to CNN_ACTIVATION_OUT, and the CNN optimizer is
-    set to Adam (consistent with the GAN and Diffusion stages).
-"""
-
 import torch
-
-# ---------------------------------------------------------------------------
-# General / reproducibility
-# ---------------------------------------------------------------------------
 SEED = 42
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -44,7 +28,7 @@ GAN_BATCH_SIZE = 16
 GAN_LATENT_DIM = 100                # noise vector size for the generator
 
 # ---------------------------------------------------------------------------
-# Diffusion Model (operates on GAN-extracted feature vectors)
+# Diffusion Model 
 # ---------------------------------------------------------------------------
 DIFF_ACTIVATION = "relu"           # ReLU
 DIFF_OPTIMIZER = "adam"
@@ -58,7 +42,7 @@ DIFF_BETA_END = 0.02
 DIFF_REFINE_STEPS = 20              # partial noise/denoise steps used at inference-time refinement
 
 # ---------------------------------------------------------------------------
-# CNN Classifier (operates on diffusion-refined feature vectors)
+# CNN Classifier
 # ---------------------------------------------------------------------------
 CNN_ACTIVATION = "relu"            # ReLU (hidden layers)
 CNN_ACTIVATION_OUT = "softmax"     # Softmax (output layer) -- see note above
