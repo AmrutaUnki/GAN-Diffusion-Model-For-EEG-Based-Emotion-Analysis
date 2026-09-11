@@ -1,24 +1,4 @@
 """
-CNN Classifier stage of the pipeline.
-
-Takes the diffusion-refined feature vectors and classifies them into the
-8 DEAP valence/arousal/dominance classes.
-
-Activation (hidden) : ReLU
-Activation (output) : Softmax
-Optimizer            : Adam, lr = 0.001   [corrected from "SoftMax" -- see config.py note]
-Loss                 : Categorical Cross-Entropy
-Epochs               : 30
-Batch size           : 16
-
-Note on the loss/activation pairing: PyTorch's nn.CrossEntropyLoss expects
-raw logits and internally applies log-softmax for numerical stability, which
-is mathematically equivalent to applying an explicit Softmax layer followed
-by a categorical cross-entropy / NLL loss. The model below exposes both:
-`forward()` returns raw logits (fed to CrossEntropyLoss during training) and
-`predict_proba()` applies Softmax explicitly for interpretable output
-probabilities at inference time.
-"""
 
 import torch
 import torch.nn as nn
