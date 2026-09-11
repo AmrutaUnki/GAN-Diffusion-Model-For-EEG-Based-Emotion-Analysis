@@ -23,20 +23,6 @@ Python/PyTorch re-implementation of the MATLAB pipeline described:
 | `cnn.py` | CNN classifier, training loop, evaluation |
 | `train.py` | End-to-end orchestration script (run this) |
 
-## One correction made to your parameter table
-
-Your table listed **"SoftMax"** as the *Optimizer* for the CNN classifier.
-Softmax is an activation function, not an optimizer, so:
-- CNN **optimizer** was set to **Adam** (lr = 0.001), consistent with the
-  other two stages.
-- **Softmax** is used as the CNN's output-layer activation (implemented via
-  `nn.CrossEntropyLoss`, which is mathematically equivalent to an explicit
-  Softmax + categorical cross-entropy — see the docstring in `cnn.py` for
-  details, and `CNNClassifier.predict_proba()` if you want explicit
-  probability outputs).
-
-If this guess is wrong (e.g., you intended a different CNN optimizer),
-just change `CNN_OPTIMIZER`/the optimizer instantiation in `cnn.py`.
 
 ## Setup
 
