@@ -1,19 +1,3 @@
-"""
-GAN stage of the pipeline.
-
-The Discriminator is trained adversarially (standard DCGAN-style setup) on
-the spectrogram images. Once trained, the Discriminator's penultimate layer
-is used as a fixed feature extractor: for every input spectrogram it
-produces a FEATURE_DIM-dimensional vector, which is passed on to the
-Diffusion stage for further refinement.
-
-Activation : LeakyReLU (as specified)
-Optimizer  : Adam, lr = 0.0002
-Loss       : Binary Cross Entropy
-Epochs     : 30
-Batch size : 16
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -27,11 +11,7 @@ def _conv_out_size(size, n_downsamples):
 
 
 class Generator(nn.Module):
-    """Simple transpose-conv generator, used only to provide the adversarial
-    training signal for the Discriminator (which is the component we
-    actually reuse for feature extraction)."""
-
-    def __init__(self, latent_dim=config.GAN_LATENT_DIM,
+       def __init__(self, latent_dim=config.GAN_LATENT_DIM,
                  img_channels=config.IMG_CHANNELS, img_size=config.IMG_SIZE):
         super().__init__()
         self.init_size = img_size // 8  # 3 upsampling stages of factor 2
@@ -61,14 +41,7 @@ class Generator(nn.Module):
 
 
 class Discriminator(nn.Module):
-    """
-    Convolutional discriminator. `forward(x)` returns (validity, features):
-        - validity: real/fake probability (used for adversarial training)
-        - features: FEATURE_DIM-dim vector from the penultimate layer
-                    (used downstream as the GAN-extracted feature vector)
-    """
-
-    def __init__(self, img_channels=config.IMG_CHANNELS, img_size=config.IMG_SIZE,
+       def __init__(self, img_channels=config.IMG_CHANNELS, img_size=config.IMG_SIZE,
                  feature_dim=config.FEATURE_DIM):
         super().__init__()
 
