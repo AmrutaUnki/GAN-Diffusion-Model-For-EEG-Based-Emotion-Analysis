@@ -38,10 +38,6 @@ pip install torch torchvision scikit-learn pillow numpy
 2. Fix the class-folder names if needed. Based on the standard DEAP
    valence/arousal/dominance labeling scheme, the 8 folders should be:
    `HVHAHD, HVHALD, HVLAHD, HVLALD, LVHAHD, LVHALD, LVLAHD, LVLALD`.
-   Two names in your original list looked like typos (`LAHADA` and a
-   duplicated `LVLAHD`) — the loader auto-detects whatever folder names
-   actually exist and prints them at startup, so verify the printed list
-   matches your intent before training.
 3. Run:
    ```bash
    python train.py
@@ -52,10 +48,6 @@ pip install torch torchvision scikit-learn pillow numpy
 ```bash
 python train.py --dummy --gan_epochs 2 --diff_epochs 2 --cnn_epochs 2
 ```
-
-This was run during development and completes all three stages without
-errors (verified on synthetic data and on a simulated class-folder
-directory).
 
 ## Multi-seed runs (for the statistical validation discussed earlier)
 
@@ -72,7 +64,7 @@ python train.py --seed 2024
 
 ## Notes / things to adapt
 
-- `FEATURE_DIM` (256) and `IMG_SIZE` (64) in `config.py` can be tuned to
+- `FEATURE_DIM`  and `IMG_SIZE` in `config.py` can be tuned to
   your actual spectrogram resolution and desired feature dimensionality.
 - `DIFF_TIMESTEPS` / `DIFF_REFINE_STEPS` control how strongly the diffusion
   stage refines (denoises) the GAN features — increase `DIFF_REFINE_STEPS`
