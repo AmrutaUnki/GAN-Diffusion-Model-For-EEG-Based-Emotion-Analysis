@@ -1,27 +1,25 @@
 # GAN + Diffusion + CNN Hybrid Pipeline (8-class Spectrogram Classification)
 
-Python/PyTorch re-implementation of the MATLAB pipeline described:
-
-1. Input: 8-class RGB spectrogram images (`Class_Wise_RGB_Spectrogram_DEAP`)
+1. Input: 8-class RGB spectrogram images
 2. **GAN**: trained adversarially on the spectrograms; the Discriminator's
-   penultimate layer is reused as a feature extractor (FEATURE_DIM-dim vector
+   intermediate layer is reused as a feature extractor (FEATURE_DIM-dim vector
    per image).
-3. **Diffusion**: a feature-space DDPM trained to denoise the GAN features;
+3. **Diffusion**: a feature-space DDIM trained to denoise the GAN features;
    at inference, a partial noise + reverse-denoise cycle "refines" each
    feature vector.
 4. **CNN**: 1D-conv + dense classifier that maps refined features to 8
-   output classes (Softmax + Categorical Cross-Entropy).
+   output classes.
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `config.py` | All hyperparameters (from your table) + data path |
-| `dataset.py` | `SpectrogramDataset` (real data, auto-detects class folders) and `DummySpectrogramDataset` (synthetic, for testing) |
+| `config.py` | All hyperparameters |
+| `dataset.py` | `SpectrogramDataset` |
 | `gan.py` | Generator, Discriminator, GAN training loop, feature extraction |
-| `diffusion.py` | Feature-space DDPM: forward process, training, refinement sampling |
+| `diffusion.py` | Feature-space DDIM: forward process, training, refinement sampling |
 | `cnn.py` | CNN classifier, training loop, evaluation |
-| `train.py` | End-to-end orchestration script (run this) |
+| `train.py` | End-to-end orchestration scrip |
 
 
 ## Setup
@@ -30,7 +28,7 @@ Python/PyTorch re-implementation of the MATLAB pipeline described:
 pip install torch torchvision scikit-learn pillow numpy
 ```
 
-## Running on your real data
+## Running the model
 
 1. Confirm `config.DATA_ROOT` points at your data folder:
    ```
