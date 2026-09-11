@@ -1,12 +1,3 @@
-"""
-Dataset utilities for 8-class spectrogram classification.
-
-Replace `SpectrogramDataset` internals with your actual data-loading logic
-(e.g. reading .png/.npy spectrograms from disk). A `DummySpectrogramDataset`
-is included so the full pipeline can be run and verified end-to-end without
-real data.
-"""
-
 import os
 import numpy as np
 import torch
@@ -98,36 +89,7 @@ class SpectrogramDataset(Dataset):
         return tensor, label
 
 
-class DummySpectrogramDataset(Dataset):
-    """
-    Synthetic stand-in for SpectrogramDataset, used to sanity-check that the
-    full GAN -> Diffusion -> CNN pipeline runs correctly end-to-end without
-    requiring real data. Each class is given a slightly different mean/
-    frequency pattern so the CNN classifier has a learnable signal.
-    """
 
-    def __init__(self, n_samples_per_class=40, seed=config.SEED):
-        rng = np.random.RandomState(seed)
-        self.data = []
-        self.labels = []
-        H = W = config.IMG_SIZE
-        C = config.IMG_CHANNELS
-
-        for cls in range(config.NUM_CLASSES):
-            base_freq = 1 + cls  # gives each class a distinct spectrogram-like pattern
-            for _ in range(n_samples_per_class):
-                xx, yy = np.meshgrid(np.linspace(0, 1, W), np.linspace(0, 1, H))
-                pattern = np.sin(2 * np.pi * base_freq * xx) * np.cos(2 * np.pi * base_freq * yy)
-                noise = rng.normal(0, 0.2, size=(H, W))
-                img = pattern + noise
-                img = np.repeat(img[None, :, :], C, axis=0).astype(np.float32)
-                self.data.append(img)
-                self.labels.append(cls)
-
-        self.data = np.stack(self.data)
-        self.labels = np.array(self.labels, dtype=np.int64)
-
-    def __len__(self):
         return len(self.labels)
 
     def __getitem__(self, idx):
