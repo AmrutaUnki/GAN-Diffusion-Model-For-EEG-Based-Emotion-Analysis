@@ -1,24 +1,3 @@
-"""
-Diffusion stage of the pipeline.
-
-Rather than diffusing raw images, this diffusion model operates directly on
-the FEATURE_DIM-dimensional feature vectors extracted by the trained GAN
-Discriminator. It learns to predict the Gaussian noise added at each forward
-diffusion step (standard DDPM objective). At inference time, a *partial*
-forward-noise + reverse-denoise cycle (DIFF_REFINE_STEPS out of
-DIFF_TIMESTEPS) is used to "refine" each GAN feature vector -- this smooths
-out noise/outlier structure in the raw GAN features while keeping them close
-to the original representation (a full T-step reverse process starting from
-pure noise would instead generate an unrelated feature vector, which is not
-what "refinement" calls for here).
-
-Activation : ReLU (as specified)
-Optimizer  : Adam, lr = 0.001
-Loss       : Mean Squared Error
-Epochs     : 30
-Batch size : 16
-"""
-
 import math
 import torch
 import torch.nn as nn
@@ -28,7 +7,7 @@ from torch.utils.data import DataLoader, TensorDataset
 import config
 
 
-def _sinusoidal_time_embedding(timesteps, dim):
+def time_embedding(timesteps, dim):
     """Standard transformer-style sinusoidal embedding for the diffusion timestep."""
     half = dim // 2
     freqs = torch.exp(
