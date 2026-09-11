@@ -1,31 +1,10 @@
-"""
-End-to-end training pipeline: GAN -> Diffusion -> CNN.
-
-Usage
------
-Real data (edit config.DATA_ROOT to point at your spectrogram folders,
-one sub-folder per class):
-
-    python train.py
-
-Quick sanity check with synthetic data (no real dataset required):
-
-    python train.py --dummy
-
-Reduce epochs for a fast smoke-test run:
-
-    python train.py --dummy --gan_epochs 2 --diff_epochs 2 --cnn_epochs 2
-"""
-
 import argparse
 import random
-
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
-
 import config
-from dataset import SpectrogramDataset, DummySpectrogramDataset
+from dataset import SpectrogramDataset
 from gan import train_gan, extract_gan_features
 from diffusion import FeatureDiffusion
 from cnn import train_cnn, evaluate_cnn
@@ -59,18 +38,10 @@ def main():
     set_seed(args.seed)
     print(f"[INFO] Using device: {config.DEVICE}")
 
-    # -----------------------------------------------------------------
-    # 1) Load data
-    # -----------------------------------------------------------------
-    if args.dummy:
-        print("[INFO] Using DummySpectrogramDataset (synthetic data for pipeline verification).")
-        full_dataset = DummySpectrogramDataset(n_samples_per_class=40, seed=args.seed)
-        all_labels = full_dataset.labels
-    else:
-        data_root = args.data_root or config.DATA_ROOT
-        print(f"[INFO] Loading spectrograms from: {data_root}")
-        full_dataset = SpectrogramDataset(root_dir=data_root)
-        all_labels = np.array([lbl for _, lbl in full_dataset.samples])
+    data_root = args.data_root or config.DATA_ROOT
+     print(f"[INFO] Loading spectrograms from: {data_root}")
+    full_dataset = SpectrogramDataset(root_dir=data_root)
+     all_labels = np.array([lbl for _, lbl in full_dataset.samples])
 
     indices = np.arange(len(full_dataset))
     train_idx, test_idx = train_test_split(
